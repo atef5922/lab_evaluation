@@ -1,125 +1,146 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(AtefAshabFileManagerApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+class AtefAshabFileManagerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      title: 'Atef Ashab File Manager',
+      theme: ThemeData.dark(),
+      home: AtefAshabHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class AtefAshabHomePage extends StatelessWidget {
+  final List<Map<String, String>> categories = [
+    {
+      'title': 'Documents(45)',
+      'subtitle': 'Includes Word, PPT, Excel, WPS, etc.'
+    },
+    {
+      'title': 'EBooks(88)',
+      'subtitle': 'Includes .umd, .ebk, .txt, .chm, etc.'
+    },
+    {'title': 'APKS(0)', 'subtitle': 'Includes .apk files'},
+    {
+      'title': 'Archives(4)',
+      'subtitle': 'Includes .7z, .rar, .zip, .iso, etc.'
+    },
+    {'title': 'Big files(41)', 'subtitle': 'Includes files > 50 MB'},
+  ];
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Atef Ashab File Manager"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AtefAshabSettingsPage()),
+              );
+            },
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search local files',
+                filled: true,
+                fillColor: const Color.fromARGB(255, 239, 236, 236),
+                prefixIcon: Icon(Icons.search),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.storage),
+            title: Text('Phone Storage'),
+            subtitle: LinearProgressIndicator(
+              value: 135 / 244,
+              backgroundColor: const Color.fromARGB(255, 241, 240, 240),
+              color: Colors.green,
+            ),
+            trailing: Text("Available: 135GB"),
+          ),
+          Divider(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                final item = categories[index];
+                return ListTile(
+                  leading: Icon(Icons.folder),
+                  title: Text(item['title']!),
+                  subtitle: Text(item['subtitle']!),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.library_music), label: 'PLAYLIST'),
+          BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'TOMP3'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.swap_horiz), label: 'SOCIAL'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'ATEF ASHAB'),
+        ],
+      ),
+    );
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class AtefAshabSettingsPage extends StatefulWidget {
+  @override
+  _AtefAshabSettingsPageState createState() => _AtefAshabSettingsPageState();
+}
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _AtefAshabSettingsPageState extends State<AtefAshabSettingsPage> {
+  bool highSpeedMode = true;
+  bool nightMode = false;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+      appBar: AppBar(title: Text("Atef Ashab Settings")),
+      body: ListView(
+        children: [
+          ListTile(leading: Icon(Icons.language), title: Text("Language")),
+          SwitchListTile(
+            value: highSpeedMode,
+            onChanged: (value) => setState(() => highSpeedMode = value),
+            title: Text("High-speed Mode supported"),
+          ),
+          ListTile(
+              leading: Icon(Icons.settings), title: Text("General Settings")),
+          SwitchListTile(
+            value: nightMode,
+            onChanged: (value) => setState(() => nightMode = value),
+            title: Text("Night mode"),
+          ),
+          ListTile(
+              leading: Icon(Icons.phone_android),
+              title: Text("Device Settings")),
+          ListTile(
+              leading: Icon(Icons.feedback), title: Text("Help & Feedback")),
+          ListTile(leading: Icon(Icons.star), title: Text("Ratings")),
+          ListTile(leading: Icon(Icons.info), title: Text("About Atef Ashab")),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
